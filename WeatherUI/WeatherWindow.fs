@@ -23,17 +23,7 @@ module WeatherWindow =
     
 
     type Msg = Text of string
-     let getAsync (url:string) = 
-        async {
-            let httpClient = new System.Net.Http.HttpClient()
-            let! response = httpClient.GetAsync(url) |> Async.AwaitTask
-            response.EnsureSuccessStatusCode () |> ignore
-            let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-            return content 
-            }
-
-         
-
+ 
 
     let update (msg: Msg) (state: State): State =
         match msg with
