@@ -20,26 +20,13 @@ type MainWindow() as this =
         
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
-        let getAsync (url:string) = 
-            async {
-                Task.Delay 20000 |> Async.AwaitTask
-                let httpClient = new System.Net.Http.HttpClient()
-                let! response = httpClient.GetAsync(url) |> Async.AwaitTask
-                response.EnsureSuccessStatusCode () |> ignore
-                let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-                return content 
-            }
-            
-        let timer (_state: WeatherWindow.State) =
-            let sub (dispatch: WeatherWindow.Msg -> unit) =        
-                getAsync "https://www.google.com"|> Async.RunSynchronously  |> WeatherWindow.Msg.Text |> dispatch      
-            Cmd.ofSub sub
+
+
 
          
 
         Elmish.Program.mkSimple (fun () -> WeatherWindow.init) WeatherWindow.update WeatherWindow.view
         |> Program.withHost this
-        |> Program.withSubscription timer
         |> Program.withConsoleTrace
         |> Program.run
         
