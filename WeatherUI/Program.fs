@@ -2,6 +2,7 @@
 
 
 open System
+open System.Threading.Tasks
 open Avalonia
 open Avalonia.Threading
 open Elmish
@@ -19,12 +20,26 @@ type MainWindow() as this =
         
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
-        
+        let getAsync (url:string) = 
+            async {
+                do! Async.Sleep 20000
+                let httpClient = new System.Net.Http.HttpClient()
+                let! response = httpClient.GetAsync(url) |> Async.AwaitTask
+                response.EnsureSuccessStatusCode () |> ignore
+                let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+                return content 
+            }
+            
+        let timer (_state: WeatherWindow.State) =
+            let sub (dispatch: WeatherWindow.Msg -> unit) =        
+                getAsync "https://www.google.com"|> Async.RunSynchronously  |> WeatherWindow.Msg.Text |> dispatch      
+            Cmd.ofSub sub
 
          
 
         Elmish.Program.mkSimple (fun () -> WeatherWindow.init) WeatherWindow.update WeatherWindow.view
         |> Program.withHost this
+        |> Program.withSubscription timer
         |> Program.withConsoleTrace
         |> Program.run
         

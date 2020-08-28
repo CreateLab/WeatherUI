@@ -2,6 +2,7 @@ namespace WeatherUI
 
 open System
 open System.Threading.Channels
+open Elmish
 
 module WeatherWindow =
 
@@ -24,16 +25,12 @@ module WeatherWindow =
 
     type Msg = Text of string
  
-    let getAsync (url:string) = 
-            async {
-                let httpClient = new System.Net.Http.HttpClient()
-                let! response = httpClient.GetAsync(url) |> Async.AwaitTask
-                response.EnsureSuccessStatusCode () |> ignore
-                let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-                return content 
-            }
+    
 
-    let init = { text = getAsync "fdsf" |> Async.Start }
+   
+        
+    let init  =
+        {text = ""}
     let update (msg: Msg) (state: State): State =
         match msg with
         |  Text text -> { state with text = text }
