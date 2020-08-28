@@ -22,7 +22,7 @@ type MainWindow() as this =
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
         let getAsync (url:string) = 
             async {
-                do! Async.Sleep 20000
+                Task.Delay 20000 |> Async.AwaitTask
                 let httpClient = new System.Net.Http.HttpClient()
                 let! response = httpClient.GetAsync(url) |> Async.AwaitTask
                 response.EnsureSuccessStatusCode () |> ignore
