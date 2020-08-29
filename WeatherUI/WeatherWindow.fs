@@ -3,6 +3,7 @@ namespace WeatherUI
 open System
 open System.Threading.Channels
 open System.Threading.Tasks
+open Avalonia.Styling
 open Elmish
 open Elmish
 open System.Text.Json
@@ -46,13 +47,20 @@ module WeatherWindow =
                     ReadOnlySpan(bytes)
                 let todos = JsonSerializer.Deserialize<IEnumerable<Todo>>(span)
                 // ensure to return a Msg from your async action
-                return SetTodos (todos |> Seq.toList)
+                return  SetTodos (todos |> Seq.toList) 
             }
-        |>  Cmd.OfAsync.result 
+        |>  Cmd.OfAsync.result
+        
+    let setNewName (url:string) = 
+            async {
+                let unitAsync = Async.Sleep 200 |> Async.Start
+                return Text ("2222")
+            }
+            |>  Cmd.OfAsync.result
   
     /// Ensure your init fn returns a State * Cmd<Msg> Tuple      
-    let init : State * Cmd<Msg> =
-        { text = ""; todos = [] } , getAsync "https://jsonplaceholder.typicode.com/todos?_page=1&_limit=5"
+    let init : State * Cmd<Msg>  =
+        { text = "fdsfsdf"; todos = [] } , getAsync "https://jsonplaceholder.typicode.com/todos?_page=1&_limit=5" , setNewName "22222"
 
     /// when you are using Program.mkProgram you need to return a State * Cmd<Msg> Tuple      
     /// from in your update function as well
@@ -66,7 +74,7 @@ module WeatherWindow =
         StackPanel.create [ 
             StackPanel.children [ 
                 TextBlock.create [ 
-                    TextBlock.text "Todos: "
+                    TextBlock.text state.text
                 ] 
                 for todo in state.todos do 
                     StackPanel.create [

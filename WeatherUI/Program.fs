@@ -21,8 +21,6 @@ type MainWindow() as this =
         //this.VisualRoot.VisualRoot.Renderer.DrawFps <- true
         //this.VisualRoot.VisualRoot.Renderer.DrawDirtyRects <- true
 
-
-
          
         // To ensure you can use a command in the init fn, use .mkProgram instead of .mkSimple
         Elmish.Program.mkProgram (fun () -> WeatherWindow.init) WeatherWindow.update WeatherWindow.view
